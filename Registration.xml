@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE scenario SYSTEM "sipp.dtd">
+
+<!-- 10.10.10.10  Local IP-->
+<scenario name="Basic UAS responder with register">
+<send retrans="500">
+         <![CDATA[
+
+      REGISTER sip:[domain] SIP/2.0
+      Via: SIP/2.0/[transport] 10.10.10.10:[local_port];branch=[branch]
+      From: CallerName <sip:[username]@[domain]>;tag=[call_number]
+      To: CalleeName <sip:[username]@[domain]>
+      Call-ID: [call_id]
+      CSeq: 1 REGISTER
+      Contact: CallerName <sip:[username]@10.10.10.10:[local_port];transport=[transport];reg-alias=dafsdfhasjghsfjhadsklhasl>
+      Content-Length: [len]
+      Content-Type: application/sdp
+      Max-Forwards: 70
+      User-Agent: [useragent]
+      Expires: 120
+    ]]>
+  </send>
+
+  <recv response="401" auth="true">
+  </recv>
+  <send retrans="500">
+    <![CDATA[
+
+      REGISTER sip:[domain] SIP/2.0
+      Via: SIP/2.0/[transport] 10.10.10.10:[local_port];branch=[branch]
+      From: CallerName <sip:[username]@[domain]>;tag=[call_number]
+      To: CalleeName <sip:[username]@[domain]>
+      Call-ID: [call_id]
+      CSeq: 1 REGISTER
+      Contact: CallerName <sip:[username]@10.10.10.10:[local_port];transport=[transport];reg-alias=dafsdfhasjghsfjhadsklhasl>
+      Content-Length: 0
+      [authentication username="[username]" password=xyz]
+      Expires: 120
+      User-Agent: [useragent]
+      Max-Forwards: 70
+    ]]>
+  </send>
+  
+  
+  <recv response="200" rtd="true">
+  </recv>
+
+  <!-- definition of the response time repartition table (unit is ms)   -->
+  <ResponseTimeRepartition value="10, 20, 30, 40, 50, 100, 150, 200"/>
+
+  <!-- definition of the call length repartition table (unit is ms)     -->
+  <CallLengthRepartition value="10, 50, 100, 500, 1000, 5000, 10000"/>
+
+</scenario>
